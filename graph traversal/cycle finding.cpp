@@ -13,12 +13,51 @@ ll gcd(ll a, ll b)
 {
     return b == 0 ? a : gcd(b, a % b);
 }
+bool dfs(ll node, vector<vector<ll>> &adj, vector<ll> &color)
+{
+    color[node] = 1;
+    for (auto &i : adj[node])
+    {
+        if (color[node] == 1)
+            return true;
+        else if (color[node] == 0)
+        {
+            if (dfs(i, adj, color))
+            {
+                return true;
+            }
+        }
+    }
+    color[node] = 2;
+    return false;
+}
 int main()
 {
     fastio;
-    ll t = 1;
-    cin >> t;
-    while (t--)
+    ll n, m;
+    cin >> n >> m;
+    vector<vector<ll>> adj(n + 1);
+    for (ll i = 0; i < m; i++)
     {
+        ll x, y;
+        cin >> x >> y;
+        adj[x].push_back(y);
     }
+    vector<ll> color(n + 1, 0);
+    bool f = false;
+    for (ll i = 1; i <= n; i++)
+    {
+        if (color[i] == 0)
+        {
+            if (dfs(i, adj, color))
+            {
+                f = true;
+                break;
+            }
+        }
+    }
+    if (f)
+        cout << "cycle\n";
+    else
+        cout << "NO cycle\n";
 }
